@@ -18,13 +18,13 @@ const HomeScreen = () => {
         color="#841584"
       />
       <Button
-        onPress={() => handleOnPress(24)}
-        title="24 puntos"
+        onPress={() => handleOnPress(30)}
+        title="30 puntos"
         color="#841584"
       />
       <Button
-        onPress={() => handleOnPress(30)}
-        title="30 puntos"
+        onPress={() => handleOnPress(24)}
+        title="Personalizar"
         color="#841584"
       />
     </SafeAreaView>
