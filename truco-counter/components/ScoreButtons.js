@@ -18,12 +18,13 @@ const ScoreButtons = ({ onPressPlus, onPressMinus }) => {
 
 const styles = StyleSheet.create({
   buttons: {
-    height: '20%',
-    paddingTop: 24,
+    flex: 1,
+    // width: '100%',
+    // paddingTop: 24,
     justifyContent: 'center',
     flexDirection: 'row',
-    borderColor: 'black',
-    borderWidth: 1,
+    // borderColor: 'black',
+    // borderWidth: 3,
   },
   button: {
     height: 56,
@@ -34,10 +35,12 @@ const styles = StyleSheet.create({
     margin: 8
   },
   plusButton: {
-    backgroundColor: Colors.green,
+    borderColor: Colors.newgreen,
+    borderWidth: 5,
   },
   minusButton: {
-    backgroundColor: Colors.red,
+    borderColor: Colors.newred,
+    borderWidth: 5,
   },
 });
 
