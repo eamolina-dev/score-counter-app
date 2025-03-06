@@ -9,7 +9,7 @@ const Points = ({ points }) => {
   return (
     <View style={styles.container}>
       {Array.from({ length: groups }).map((_, i) => (
-        <PointsGroup key={`group-${i}`} points={5} />
+        <PointsGroup key={`group-${i}`} points={5} height={100} width={100} />
       ))}
       {remainingPoints > 0 && <PointsGroup points={remainingPoints} />}
     </View>

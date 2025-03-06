@@ -1,19 +1,19 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Colors } from '../constants/colors';
+import TapArea from './TapArea';
 
-const Header = ({ points, onChangePoints }) => {
+const Header = ({ points, onPressPoints }) => {
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.points}
-        value={points}
-        onChangeText={onChangePoints}
-        selectionColor={Colors.darkgrey}
-      />
-      <Text style={styles.text}>
-        puntos
-      </Text>
+      <TapArea 
+        onPress={onPressPoints}
+        style={styles.tapArea}
+      >
+        <Text style={styles.points}>
+          {points}
+        </Text>
+      </TapArea>
     </View>
   );
 };
@@ -21,23 +21,16 @@ const Header = ({ points, onChangePoints }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-end',
-    // paddingLeft: 32,
-    // borderColor: 'black',
-    // borderWidth: 3,
+    alignItems: 'center',
+  },
+  tapArea: {
+    borderColor: 'black',
+    borderWidth: 1,
   },
   points: {
     fontSize: 48,
     fontFamily: 'Henny-Penny',
-    paddingBottom: 0,
-  },
-  text: {
-    fontSize: 16,
-    fontFamily: 'Henny-Penny',
-    color: Colors.darkgrey,
-    paddingBottom: 24
   },
 });
 

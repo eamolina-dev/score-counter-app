@@ -2,16 +2,25 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Colors } from '../constants/colors';
+import TapArea from './TapArea';
 
 const ScoreButtons = ({ onPressPlus, onPressMinus }) => {
   return (
     <View style={styles.buttons}>
-      <TouchableOpacity onPress={onPressPlus} style={[styles.button, styles.plusButton]} >
-        <FontAwesome name='plus' size={32} color='black' />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={onPressMinus} style={[styles.button, styles.minusButton]} >
-        <FontAwesome name='minus' size={32} color='black' />
-      </TouchableOpacity>
+      <TapArea 
+        onPress={onPressPlus} 
+      >
+        <View style={[styles.button, styles.plusButton]}>
+          <FontAwesome name='plus' size={32} color='black' />
+        </View>
+      </TapArea>
+      <TapArea 
+        onPress={onPressMinus} 
+      >
+        <View style={[styles.button, styles.minusButton]}>
+          <FontAwesome name='minus' size={32} color='black' />
+        </View>
+      </TapArea>
     </View>
   );
 };
@@ -19,12 +28,9 @@ const ScoreButtons = ({ onPressPlus, onPressMinus }) => {
 const styles = StyleSheet.create({
   buttons: {
     flex: 1,
-    // width: '100%',
-    // paddingTop: 24,
-    justifyContent: 'center',
     flexDirection: 'row',
-    // borderColor: 'black',
-    // borderWidth: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     height: 56,
@@ -32,7 +38,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 8
+    marginHorizontal: 10,
   },
   plusButton: {
     borderColor: Colors.newgreen,

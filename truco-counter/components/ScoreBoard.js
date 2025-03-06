@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import TeamColumn from '../components/TeamColumn';
+import TeamColumn from './ScoreColumn';
 import { Colors } from '../constants/colors';
 
-const Scoreboard = ({ points, state, handlePress }) => {
+const ScoreBoard = ({ points, state, handlePress }) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftSide}>
@@ -56,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Scoreboard;
+export default ScoreBoard;
