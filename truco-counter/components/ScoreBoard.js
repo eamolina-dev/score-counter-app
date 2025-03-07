@@ -1,30 +1,19 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import TeamColumn from './ScoreColumn';
-import { Colors } from '../constants/colors';
+import ScoreColumn from './ScoreColumn';
 
-const ScoreBoard = ({ points, state, handlePress }) => {
+const ScoreBoard = ({ points, leftPoints, rightPoints }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.leftSide}>
-        <TeamColumn 
-          teamName="Nosotros" 
-          pointsGoal={points} 
-          points={state.leftPoints} 
-          onPressPlus={() => handlePress('INCREMENT', 'leftPoints')} 
-          onPressMinus={() => handlePress('DECREMENT', 'leftPoints')} 
-        />
-      </View>
+      <ScoreColumn 
+        pointsGoal={points} 
+        points={leftPoints} 
+      />
       <View style={styles.divider} />
-      <View style={styles.rightSide}>
-        <TeamColumn 
-          teamName="Ellos" 
-          pointsGoal={points} 
-          points={state.rightPoints} 
-          onPressPlus={() => handlePress('INCREMENT', 'rightPoints')} 
-          onPressMinus={() => handlePress('DECREMENT', 'rightPoints')} 
-        />
-      </View>
+      <ScoreColumn 
+        pointsGoal={points} 
+        points={rightPoints} 
+      />
     </View>
   );
 };
@@ -35,18 +24,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'lightblue',
   },
-  leftSide: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  rightSide: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  // leftSide: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
+  // rightSide: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
   divider: {
     // backgroundColor: Colors.darkgrey,
     // height: '70%',

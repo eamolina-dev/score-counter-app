@@ -2,54 +2,46 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Match from '../assets/svg/match.svg';
 
-const PointsGroup = ({ points, height, width }) => {
+const PointsGroup = ({ groupPoints, points, height, width }) => {
+  const Group = ({ style, tilt }) => {
+    return (
+      <Match 
+        height={64} 
+        width={64} 
+        style={style}
+        transform={[
+          { rotate: tilt }
+        ]}
+      />
+    );
+  }; 
+
   return (
     <View style={[styles.pointsGroup, { height, width }]}>
-      { points >= 1 && <Match 
-          height={64} 
-          width={64} 
-          style={styles.match1}
-          transform={[
-            { rotate: '0deg' }
-          ]}
-        />
-      }
-      { points >= 2 && <Match 
-          height={64} 
-          width={64} 
-          style={styles.match2}
-          transform={[
-            { rotate: '90deg' }
-          ]}
-        />
-      }
-      { points >= 3 && <Match 
-          height={64} 
-          width={64} 
-          style={styles.match3}
-          transform={[
-            { rotate: '180deg' }
-          ]}
-        />
-      }
-      { points >= 4 && <Match 
-          height={64} 
-          width={64} 
-          style={styles.match4}
-          transform={[
-            { rotate: '270deg' }
-          ]}
-        />
-      }
-      { points >= 5 && <Match 
-          height={64} 
-          width={64} 
-          style={styles.match5}
-          transform={[
-            { rotate: '45deg' }
-          ]}
-        />
-      }
+      <Group
+        style={[styles.match1, { opacity: points >= 1 ? 100 : 0 }]}
+        tilt='0deg'
+      />
+
+      <Group
+        style={[styles.match2, { opacity: points >= 2 ? 100 : 0 }]}
+        tilt='90deg'
+      />
+      
+      <Group
+        style={[styles.match3, { opacity: points >= 3 ? 100 : 0 }]}
+        tilt='180deg'
+      />
+
+      <Group
+        style={[styles.match4, { opacity: points >= 4 ? 100 : 0 }]}
+        tilt='270deg'
+      />
+      
+      <Group
+        style={[styles.match5, { opacity: points >= 5 ? 100 : 0 }]}
+        tilt='45deg'
+      />
     </View>
   );
 };
@@ -57,6 +49,10 @@ const PointsGroup = ({ points, height, width }) => {
 const styles = StyleSheet.create({
   pointsGroup: {
     position: 'relative',
+    // flex: 1,
+    alignSelf: 'stretch',
+    borderColor: 'yellow',
+    borderWidth: 2,
   },  
   match1: {
     position: 'absolute',

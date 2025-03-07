@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Colors } from '../constants/colors';
 import TapArea from './TapArea';
@@ -7,16 +7,12 @@ import TapArea from './TapArea';
 const ScoreButtons = ({ onPressPlus, onPressMinus }) => {
   return (
     <View style={styles.buttons}>
-      <TapArea 
-        onPress={onPressPlus} 
-      >
+      <TapArea onPress={onPressPlus} testID="plus-button">
         <View style={[styles.button, styles.plusButton]}>
           <FontAwesome name='plus' size={32} color='black' />
         </View>
       </TapArea>
-      <TapArea 
-        onPress={onPressMinus} 
-      >
+      <TapArea onPress={onPressMinus} testID="minus-button">
         <View style={[styles.button, styles.minusButton]}>
           <FontAwesome name='minus' size={32} color='black' />
         </View>

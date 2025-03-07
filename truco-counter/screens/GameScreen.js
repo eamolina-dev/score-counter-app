@@ -7,19 +7,17 @@ import Header from '../components/Header';
 import Logo from '../assets/svg/logo.svg';
 import Team from '../components/Team';
 import ScoreButtons from '../components/ScoreButtons';
-import ScoreColumn from '../components/ScoreColumn';
-import {
-  SafeAreaView,
-  SafeAreaProvider,
-} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import TapArea from '../components/TapArea';
 import TapToModal from '../components/TapToModal';
 import CustomModal from '../components/CustomModal';
+import ScoreBoard from '../components/ScoreBoard';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'INCREMENT':
-      return { ...state, [action.team]: state[action.team] + 1 };
+      return { ...state, [action.team]: Math.min(state.points , state[action.team] + 1) };
     case 'DECREMENT':
       return { ...state, [action.team]: Math.max(0, state[action.team] - 1) };
     case 'SET_GAME_OVER':
@@ -59,6 +57,7 @@ const GameScreen = () => {
 
   const [newName, setNewName] = useState('');
   const [newGoal, setNewGoal] = useState('');
+  const [winner, setWinner] = useState('');
 
   const [changingLeft, setChangingLeft] = useState(true);
 
@@ -79,15 +78,19 @@ const GameScreen = () => {
   });
 
   const handlePress = useCallback((type, team) => {
-    if (!state.gameOver) dispatch({ type, team });
-  }, [state.gameOver]);
-
+    dispatch({ type, team });
+  }, [dispatch]);
+  
   useEffect(() => {
-    if (!state.gameOver && (state.leftPoints === state.points || state.rightPoints === state.points)) {
+    if (state.gameOver) return;
+  
+    if (state.leftPoints === state.points || state.rightPoints === state.points) {
+      const winnerName = state.leftPoints === state.points ? state.leftTeamName : state.rightTeamName;
+      setWinner(winnerName);
       dispatch({ type: 'SET_GAME_OVER' });
       setCustomModal(true);
     }
-  }, [state.leftPoints, state.rightPoints, state.points]);  
+  }, [state.leftPoints, state.rightPoints]);  
 
   useEffect(() => {
     if (loaded || error) {
@@ -127,15 +130,54 @@ const GameScreen = () => {
   };
 
   const handleChangePoints = () => {
-    dispatch({ type: 'CHANGE_POINTS_GOAL', newGoal: parseInt(newGoal) });
-    setPointsModalIsVisible(false);
+    const parsedGoal = parseInt(newGoal);
+    if (!isNaN(parsedGoal)) {
+      dispatch({ type: 'CHANGE_POINTS_GOAL', newGoal: parsedGoal });
+      setPointsModalIsVisible(false);
+    } else {
+      Alert.alert("Error", "Ingrese un número válido");
+    }
+  };  
+
+
+  const ScoreButtonGroup = ({ team }) => (
+    <ScoreButtons 
+      onPressPlus={() => handlePress('INCREMENT', team)} 
+      onPressMinus={() => handlePress('DECREMENT', team)} 
+    />
+  );
+
+  const TeamName = ({ team }) => {
+    const isLeftTeam = team === state.leftTeamName;
+
+    return (
+      <TapToModal 
+        title="Cambiar Nombre"
+        isVisible={nameModalIsVisible}
+        setIsVisible={setNameModalIsVisible}
+        value={newName}
+        onChangeText={setNewName}
+        onPress={isLeftTeam ? handleChangeLeftTeamName : handleChangeRightTeamName}
+        onConfirm={() => console.log('Valor confirmado:', newName)}
+      >
+        {isLeftTeam ? 
+          <Team name={state.leftTeamName} onChangeName={onChangeLeftTeamName} /> 
+          : <Team name={state.rightTeamName} onChangeName={onChangeRightTeamName} />}
+      </TapToModal>
+    );
   };
 
+  const onPressSettings = () => {};
+
+
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.screen}>
-        <View style={styles.container}>
-          <View style={styles.header}>
+    <SafeAreaView style={styles.screen}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <Logo width={80} height={80} />
+          </View>
+          <View style={styles.headerMid}>
             <TapToModal 
               title="Cambiar Puntos"
               isVisible={pointsModalIsVisible}
@@ -148,72 +190,46 @@ const GameScreen = () => {
               <Header points={state.points.toString()} onPressPoints={onChangePoints} />
             </TapToModal>
           </View>
-          <View style={styles.teamNames}>
-            <TapToModal 
-              title="Cambiar Nombre"
-              isVisible={nameModalIsVisible}
-              setIsVisible={setNameModalIsVisible}
-              value={newName}
-              onChangeText={setNewName}
-              onPress={handleChangeLeftTeamName}
-              onConfirm={() => console.log('Valor confirmado:', newName)}
-            >
-              <Team name={state.leftTeamName} onChangeName={onChangeLeftTeamName} />
-            </TapToModal>
-            <TapToModal 
-              title="Cambiar Nombre"
-              isVisible={nameModalIsVisible}
-              setIsVisible={setNameModalIsVisible}
-              value={newName}
-              onChangeText={setNewName}
-              onPress={handleChangeRightTeamName}
-              onConfirm={() => console.log('Valor confirmado:', newName)}
-            >
-              <Team name={state.rightTeamName} onChangeName={onChangeRightTeamName} />
-            </TapToModal>
-          </View>
-          <View style={styles.scoreboard}>
-            <ScoreColumn 
-              pointsGoal={state.points} 
-              points={state.leftPoints} 
-            />
-            <ScoreColumn 
-              pointsGoal={state.points} 
-              points={state.rightPoints} 
-            />
-          </View>
-          <View style={styles.scoreButtons}>
-            <ScoreButtons 
-              onPressPlus={() => handlePress('INCREMENT', 'leftPoints')} 
-              onPressMinus={() => handlePress('DECREMENT', 'leftPoints')} 
-            />
-            <ScoreButtons 
-              onPressPlus={() => handlePress('INCREMENT', 'rightPoints')} 
-              onPressMinus={() => handlePress('DECREMENT', 'rightPoints')} 
-            />
-          </View>
-          <View style={styles.ads}>
-            {/* <Logo width={40} height={40} /> */}
-            <TapArea 
-              onPress={() => dispatch({ type: 'RESET_GAME' })} 
-              style={{ backgroundColor: 'gray', padding: 10, marginTop: 20 }}
-            >
-              <Text style={{ color: 'white' }}>Reiniciar Juego</Text>
+          <View style={styles.headerRight}>
+            <TapArea onPress={onPressSettings}>
+            {/* () => dispatch({ type: 'RESET_GAME' }) */}
+              <View style={styles.settings}>
+                <FontAwesome name='gear' size={32} color='black' />
+              </View>
             </TapArea>
           </View>
-
-          <CustomModal 
-            isVisible={customModal}
-            setIsVisible={setCustomModal}
-          >
-            <Button title='OK' onPress={() => {dispatch({ type: 'RESET_GAME' }), setCustomModal(false)}} />
-            <Button title='X' onPress={() => {dispatch({ type: 'RESET_GAME' }), setCustomModal(false)}} />
-          </CustomModal>
         </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+        <View style={styles.teamNames}>
+          <TeamName team={state.leftTeamName} />
+          <TeamName team={state.rightTeamName} />
+        </View>
+        <View style={styles.scoreboard}>
+          <ScoreBoard 
+            points={state.points}
+            leftPoints={state.leftPoints}
+            rightPoints={state.rightPoints}
+          />
+        </View>
+        <View style={styles.scoreButtons}>
+          <ScoreButtonGroup team="leftPoints" />
+          <ScoreButtonGroup team="rightPoints" />
+        </View>
+        <View style={styles.ads}>
+        </View>
+
+        <CustomModal isVisible={customModal} setIsVisible={setCustomModal}>
+          <View style={{ alignItems: 'center', padding: 20 }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>¡Fin del Juego!</Text>
+            <Text style={{ fontSize: 16, marginVertical: 10 }}>Ganador: {winner}</Text>
+            <Button title="OK" onPress={() => { dispatch({ type: 'RESET_GAME' }); setCustomModal(false); }} />
+            <Button title="CANCEL" onPress={() => { setCustomModal(false); }} />
+          </View>
+        </CustomModal>
+      </View>
+    </SafeAreaView>
   );
 };
+
 
 const styles = StyleSheet.create({
   screen: {
@@ -224,7 +240,21 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 3,
-    backgroundColor: 'red'
+    backgroundColor: 'red',
+    flexDirection: 'row',
+  },
+  headerLeft: {
+    flex: 1,
+    backgroundColor: 'blue'
+  },
+  headerMid: {
+    flex: 1,
+  },
+  headerRight: {
+    flex: 1,
+    // justifyContent: 'flex-end',
+    // alignItems: 'flex-end',
+    backgroundColor: 'green'
   },
   teamNames: {
     flex: 2,
@@ -235,7 +265,6 @@ const styles = StyleSheet.create({
   scoreboard: {
     flex: 15,
     backgroundColor: 'black',
-    flexDirection: 'row',
   },
   scoreButtons: {
     flex: 2,
@@ -254,6 +283,15 @@ const styles = StyleSheet.create({
   tapArea: {
     backgroundColor: 'red',
     flex: 1
+  },
+  settings: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 56,
+    width: 56,
+    borderRadius: 28,
   },
 });
 

@@ -2,16 +2,14 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import PointsGroup from './PointsGroup';
 
-const Points = ({ points }) => {
-  const groups = Math.floor(points / 5);
-  const remainingPoints = points % 5;
+const Points = ({ fullGroups, rest, points }) => {
 
   return (
     <View style={styles.container}>
-      {Array.from({ length: groups }).map((_, i) => (
-        <PointsGroup key={`group-${i}`} points={5} height={100} width={100} />
+      {Array.from({ length: fullGroups }).map((_, index) => (
+        <PointsGroup key={index} points={5} height={100} width={100} />
       ))}
-      {remainingPoints > 0 && <PointsGroup points={remainingPoints} />}
+      <PointsGroup points={rest} height={100} width={100} />
     </View>
   );
 };
@@ -19,6 +17,11 @@ const Points = ({ points }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignSelf: 'stretch',
+    // justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: 'green',
+    borderWidth: 2
   },
 });
 

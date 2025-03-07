@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text, TextInput } from 'react-native';
 import Modal from 'react-native-modal';
 import TapArea from './TapArea';
@@ -20,7 +20,7 @@ const TapToModal = ({ children, isVisible, setIsVisible, title, value, onChangeT
         // statusBarTranslucent={true}
       >
         <View style={styles.modal}>
-          {/* <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>{title}</Text>
           <TextInput 
             value={value}
             onChangeText={text => onChangeText(text)}
@@ -31,19 +31,6 @@ const TapToModal = ({ children, isVisible, setIsVisible, title, value, onChangeT
             style={styles.tapArea}
           >
             <Text>Confirm</Text>
-          </TapArea> */}
-
-          <TapArea 
-            onPress={onPress}
-            style={styles.tapArea}
-          >
-            <Text>Nuevo Juego</Text>
-          </TapArea>
-          <TapArea 
-            onPress={onPress}
-            style={styles.tapArea}
-          >
-            <Text>Cancelar</Text>
           </TapArea>
         </View>
       </Modal>
