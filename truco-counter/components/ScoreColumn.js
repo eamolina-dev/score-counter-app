@@ -4,16 +4,13 @@ import Points from './Points';
 
 const ScoreColumn = ({ pointsGoal, points }) => {
   const half = Math.floor(pointsGoal / 2);
-  const goods = points - half;
-
-  const fullGroups = Math.floor(half / 5);
-  const rest = half % 5;
+  const bads = points >= half ? half : points;
+  const goods = points >= half ? points - half : 0;
 
   return (
     <View style={styles.pointsContainer}>
-      <Points fullGroups={fullGroups} rest={rest} points={points} />
-      <Points fullGroups={fullGroups} rest={rest} points={points} />
-      {/* {points >= half && <Points points={goods} />} */}
+      <Points totalPoints={half} points={bads} />
+      <Points totalPoints={half} points={goods} />
     </View>
   );
 };

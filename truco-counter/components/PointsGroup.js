@@ -2,45 +2,39 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Match from '../assets/svg/match.svg';
 
-const PointsGroup = ({ groupPoints, points, height, width }) => {
+const PointsGroup = ({ points, height, width }) => {
   const Group = ({ style, tilt }) => {
     return (
       <Match 
         height={64} 
         width={64} 
         style={style}
-        transform={[
-          { rotate: tilt }
-        ]}
+        transform={[{ rotate: tilt }]}
       />
     );
-  }; 
+  };
 
   return (
     <View style={[styles.pointsGroup, { height, width }]}>
       <Group
-        style={[styles.match1, { opacity: points >= 1 ? 100 : 0 }]}
-        tilt='0deg'
+        style={[styles.match1, { opacity: points >= 1 ? 1 : 0 }]}
+        tilt="0deg"
       />
-
       <Group
-        style={[styles.match2, { opacity: points >= 2 ? 100 : 0 }]}
-        tilt='90deg'
+        style={[styles.match2, { opacity: points >= 2 ? 1 : 0 }]}
+        tilt="90deg"
       />
-      
       <Group
-        style={[styles.match3, { opacity: points >= 3 ? 100 : 0 }]}
-        tilt='180deg'
+        style={[styles.match3, { opacity: points >= 3 ? 1 : 0 }]}
+        tilt="180deg"
       />
-
       <Group
-        style={[styles.match4, { opacity: points >= 4 ? 100 : 0 }]}
-        tilt='270deg'
+        style={[styles.match4, { opacity: points >= 4 ? 1 : 0 }]}
+        tilt="270deg"
       />
-      
       <Group
-        style={[styles.match5, { opacity: points >= 5 ? 100 : 0 }]}
-        tilt='45deg'
+        style={[styles.match5, { opacity: points >= 5 ? 1 : 0 }]}
+        tilt="45deg"
       />
     </View>
   );
@@ -49,11 +43,10 @@ const PointsGroup = ({ groupPoints, points, height, width }) => {
 const styles = StyleSheet.create({
   pointsGroup: {
     position: 'relative',
-    // flex: 1,
     alignSelf: 'stretch',
     borderColor: 'yellow',
     borderWidth: 2,
-  },  
+  },
   match1: {
     position: 'absolute',
     top: 10,
