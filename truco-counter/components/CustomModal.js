@@ -4,18 +4,18 @@ import Modal from "react-native-modal";
 import { Colors } from "../constants/colors";
 import { LinearGradient } from "expo-linear-gradient";
 
-const CustomModal = ({ children, isVisible, setIsVisible }) => {
+const CustomModal = ({ children, isVisible, onBackdropPress }) => {
   return (
     <Modal
       isVisible={isVisible}
-      onBackdropPress={() => setIsVisible(false)}
+      onBackdropPress={onBackdropPress}
       animationIn="slideInUp"
       animationOut="slideOutDown"
       backdropOpacity={0.5}
     >
       <View style={styles.modalContainer}>
         <LinearGradient
-          colors={["#070B14", "white"]}
+          colors={[Colors.darkblue, "white"]}
           style={styles.gradient}
         >
           <View style={styles.modalContent}>{children}</View>

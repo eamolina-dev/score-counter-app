@@ -1,20 +1,19 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Colors } from '../constants/colors';
 import TapArea from './TapArea';
 import { FontAwesome6 } from "@expo/vector-icons";
 
-const ScoreButtons = ({ leftButton, rightButton, onPressLeft, onPressRight, color }) => {
+const Buttons = ({ leftButton, rightButton, onPressLeft, onPressRight, color }) => {
   return (
     <View style={styles.buttons}>
       <TapArea onPress={onPressLeft}>
-        <View style={[styles.button, styles.minusButton]}>
+        <View style={[styles.button, styles.leftButton]}>
           <FontAwesome6 name={leftButton} size={32} color={color} />
         </View>
       </TapArea>
       <TapArea onPress={onPressRight}>
-        <View style={[styles.button, styles.plusButton]}>
+        <View style={[styles.button, styles.rightButton]}>
           <FontAwesome6 name={rightButton} size={32} color={color} />
         </View>
       </TapArea>
@@ -37,16 +36,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 10,
   },
-  plusButton: {
+  leftButton: {
     borderColor: Colors.green,
     borderWidth: 5,
-    // border: 0.9,
   },
-  minusButton: {
+  rightButton: {
     borderColor: Colors.red,
     borderWidth: 5,
-    // opacity: 0.7
+    // shadow
   },
+
 });
 
-export default ScoreButtons;
+export default Buttons;

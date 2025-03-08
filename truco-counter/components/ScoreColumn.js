@@ -23,15 +23,13 @@ const styles = StyleSheet.create({
     height: '100%',
     alignSelf: 'stretch',
     alignItems: 'center',
-    // borderColor: 'white',
-    // borderWidth: 1
   },
   divider: {
     position: 'absolute',
     left: 0,
     right: 0,
     top: '50%',
-    backgroundColor: '#070B14',
+    backgroundColor: Colors.darkblue,
     height: 3,
   },
 });

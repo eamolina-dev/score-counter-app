@@ -9,5 +9,6 @@ export const Colors = {
   yellow: '#FAA63A',
   lightgreen: '#03A678',
   green: '#2C6871', // blue
-  darkgreen: '#014040'
+  darkgreen: '#014040',
+  darkblue: '#070B14',
 };
