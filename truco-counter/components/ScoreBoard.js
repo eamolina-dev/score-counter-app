@@ -1,18 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import ScoreColumn from './ScoreColumn';
+import { Colors } from '../constants/colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const ScoreBoard = ({ points, leftPoints, rightPoints }) => {
+  const half = Math.floor(points / 2);
+  // const [markMidLine, setMarkMidLine] = useState(false);
+
+  const markMidLine = leftPoints >= half || rightPoints >= half;
+
   return (
     <View style={styles.container}>
       <ScoreColumn 
         pointsGoal={points} 
         points={leftPoints} 
+        markMidLine={markMidLine}
+        // team='left'
       />
-      <View style={styles.divider} />
+      {/* <LinearGradient colors={[Colors.red, Colors.green]}> */}
+        <View style={styles.divider} />
+      {/* </LinearGradient> */}
       <ScoreColumn 
         pointsGoal={points} 
         points={rightPoints} 
+        markMidLine={markMidLine}
+        // team='right'
       />
     </View>
   );
@@ -36,11 +49,10 @@ const styles = StyleSheet.create({
   //   alignItems: 'center',
   // },
   divider: {
-    // backgroundColor: Colors.darkgrey,
-    // height: '70%',
-    // width: '0.5%',
-    // alignSelf: 'flex-start',
-    // marginTop: 80
+    backgroundColor: '#070B14',
+    height: '100%',
+    width: 3,
+    alignSelf: 'flex-start' 
   },
 });
 

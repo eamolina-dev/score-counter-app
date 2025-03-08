@@ -3,18 +3,19 @@ import { View, StyleSheet } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Colors } from '../constants/colors';
 import TapArea from './TapArea';
+import { FontAwesome6 } from "@expo/vector-icons";
 
-const ScoreButtons = ({ onPressPlus, onPressMinus }) => {
+const ScoreButtons = ({ leftButton, rightButton, onPressLeft, onPressRight, color }) => {
   return (
     <View style={styles.buttons}>
-      <TapArea onPress={onPressPlus} testID="plus-button">
-        <View style={[styles.button, styles.plusButton]}>
-          <FontAwesome name='plus' size={32} color='black' />
+      <TapArea onPress={onPressLeft}>
+        <View style={[styles.button, styles.minusButton]}>
+          <FontAwesome6 name={leftButton} size={32} color={color} />
         </View>
       </TapArea>
-      <TapArea onPress={onPressMinus} testID="minus-button">
-        <View style={[styles.button, styles.minusButton]}>
-          <FontAwesome name='minus' size={32} color='black' />
+      <TapArea onPress={onPressRight}>
+        <View style={[styles.button, styles.plusButton]}>
+          <FontAwesome6 name={rightButton} size={32} color={color} />
         </View>
       </TapArea>
     </View>
@@ -37,12 +38,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   plusButton: {
-    borderColor: Colors.newgreen,
+    borderColor: Colors.green,
     borderWidth: 5,
+    // border: 0.9,
   },
   minusButton: {
-    borderColor: Colors.newred,
+    borderColor: Colors.red,
     borderWidth: 5,
+    // opacity: 0.7
   },
 });
 

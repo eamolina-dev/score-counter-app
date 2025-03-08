@@ -1,23 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput } from 'react-native';
 import Modal from 'react-native-modal';
 import TapArea from './TapArea';
 import { Colors } from '../constants/colors';
 
-const TapToModal = ({ children, isVisible, setIsVisible, title, value, onChangeText, onPress }) => {
+const TapToModal = ({ children, isVisible, title, value, onChangeText, onPress }) => {
+  const [modalVisible, setModalVisible] = useState(isVisible);
+  
+  const handleBackdropPress = () => {
+    setModalVisible(false);
+  };
+
   return (
     <View style={styles.container}>
-      <TapArea onPress={() => setIsVisible(true)}>
+      <TapArea onPress={() => setModalVisible(true)}>
         {children}
       </TapArea>
 
       <Modal 
-        isVisible={isVisible} 
-        onBackdropPress={() => setIsVisible(false)}
+        isVisible={modalVisible} 
+        onBackdropPress={handleBackdropPress}
         animationType='slide'
-        // backdropColor='transparent'
         backdropOpacity={0.5}
-        // statusBarTranslucent={true}
       >
         <View style={styles.modal}>
           <Text style={styles.title}>{title}</Text>
@@ -40,14 +44,11 @@ const TapToModal = ({ children, isVisible, setIsVisible, title, value, onChangeT
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // alignSelf: 'center',
     borderColor: 'blue',
     borderWidth: 2,
   },
   modal: {
     height: 200,
-    // backgroundColor: 'blue',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 28,

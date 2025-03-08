@@ -22,10 +22,9 @@ const Points = ({ points }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignSelf: 'stretch',
-    alignItems: 'center',
-    borderColor: 'green',
-    borderWidth: 2
+    // borderColor: 'white',
+    // borderWidth: 1,
+    paddingTop: 36,
   },
 });
 

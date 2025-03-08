@@ -11,8 +11,6 @@ const TapArea = ({ onPress, children, style }) => {
 
 const styles = StyleSheet.create({
   touchableArea: {
-    // flex: 1,
-    // alignSelf: 'stretch',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',

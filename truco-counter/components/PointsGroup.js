@@ -44,8 +44,7 @@ const styles = StyleSheet.create({
   pointsGroup: {
     position: 'relative',
     alignSelf: 'stretch',
-    borderColor: 'yellow',
-    borderWidth: 2,
+    marginBottom: 24
   },
   match1: {
     position: 'absolute',

@@ -1,34 +1,54 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import TapArea from './TapArea';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Colors } from '../constants/colors';
 
-const Team = ({ name, onChangeName }) => {
+const Team = ({ name, onChangeName, areGood }) => {
   return (
-    <TapArea
-      onPress={onChangeName}
-      style={styles.tapArea}
-    >
-      <Text style={styles.team}>
-        {name}
-      </Text>
-    </TapArea>
+    <View style={styles.container}>
+      <LinearGradient
+        colors={[areGood ? '#2C6871' : '#551717', "transparent"]}
+        style={styles.shadow}
+      />
+      <TapArea
+        onPress={onChangeName}
+        style={styles.tapArea}
+      >
+        <Text style={styles.team}>
+          {name}
+        </Text>
+      </TapArea>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignSelf: 'stretch',
+  },
   team: {
-    fontFamily: 'Atma',
-    backgroundColor: 'grey',
-    height: 50,
-    width: 150,
+    flex: 1,
+    alignSelf: 'stretch',
+    fontFamily: 'Russo-One',
     fontSize: 20,
     textAlign: 'center',
     textAlignVertical: 'center',
-    borderRadius: 30,
+    color: Colors.white,
+    // borderWidth: 1,
+    // borderColor: 'white',
   },
   tapArea: {
-    borderColor: 'black',
-    borderWidth: 1,
+    flex: 1,
+    alignSelf: 'stretch',
+  },
+  shadow: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 80,
   },
 });
 

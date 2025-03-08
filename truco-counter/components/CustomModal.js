@@ -1,41 +1,48 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import Modal from 'react-native-modal';
-import { Colors } from '../constants/colors';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import Modal from "react-native-modal";
+import { Colors } from "../constants/colors";
+import { LinearGradient } from "expo-linear-gradient";
 
 const CustomModal = ({ children, isVisible, setIsVisible }) => {
   return (
-    <Modal 
-      isVisible={isVisible} 
+    <Modal
+      isVisible={isVisible}
       onBackdropPress={() => setIsVisible(false)}
-      animationType='slide'
-      // backdropColor='transparent'
+      animationIn="slideInUp"
+      animationOut="slideOutDown"
       backdropOpacity={0.5}
-      // statusBarTranslucent={true}
     >
-      <View style={styles.modal}>
-        {children}
+      <View style={styles.modalContainer}>
+        <LinearGradient
+          colors={["#070B14", "white"]}
+          style={styles.gradient}
+        >
+          <View style={styles.modalContent}>{children}</View>
+        </LinearGradient>
       </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    // alignSelf: 'center',
-    borderColor: 'blue',
-    borderWidth: 2,
-  },
-  modal: {
-    height: 200,
-    // backgroundColor: 'blue',
-    justifyContent: 'center',
-    alignItems: 'center',
+  modalContainer: {
+    height: 220,
+    width: 360,
+    alignSelf: "center",
     borderRadius: 28,
-    borderColor: 'blue',
-    borderWidth: 3,
-    backgroundColor: Colors.lightgrey,
+    overflow: "hidden",
+  },
+  gradient: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "100%",
+    padding: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
