@@ -1,0 +1,4 @@
+export const DEFAULT_SETTINGS = {
+  SCORE_GOAL: 100,
+  LOWER_LIMIT: -10,
+};
