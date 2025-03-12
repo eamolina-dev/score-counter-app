@@ -12,12 +12,16 @@ const CustomModal = ({ children, isVisible, onBackdropPress }) => {
       animationIn="slideInUp"
       animationOut="slideOutDown"
       backdropOpacity={0.5}
+      presentationStyle="overFullScreen"
     >
       <View style={styles.modalContainer}>
-        <LinearGradient
-          colors={[Colors.darkblue, "white"]}
-          style={styles.gradient}
-        >
+      <LinearGradient
+        colors={[Colors.white, Colors.white]} 
+        style={styles.gradient}
+        // start={{ x: 0.5, y: 0.2 }}
+        // end={{ x: 0.5, y: 0.7 }}
+      >
+
           <View style={styles.modalContent}>{children}</View>
         </LinearGradient>
       </View>
@@ -27,11 +31,12 @@ const CustomModal = ({ children, isVisible, onBackdropPress }) => {
 
 const styles = StyleSheet.create({
   modalContainer: {
-    height: 220,
+    height: 100,
     width: 360,
     alignSelf: "center",
     borderRadius: 28,
     overflow: "hidden",
+    backgroundColor: 'white'
   },
   gradient: {
     flex: 1,

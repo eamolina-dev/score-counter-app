@@ -1,17 +1,19 @@
 import React, { useEffect, useReducer, useCallback, useState } from 'react';
-import { StyleSheet, Alert, View, Text, TextInput, StatusBar } from 'react-native';
+import { StyleSheet, Alert, View, StatusBar, Text, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import Logo from '../assets/svg/logo.svg';
 import Team from '../components/Team';
-import Buttons from '../components/Buttons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomModal from '../components/CustomModal';
 import ScoreBoard from '../components/ScoreBoard';
 import { Colors } from '../constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import PointsGoal from '../components/PointsGoal';
+import { styles } from './GameScreen-styles';
+import { ScoreButtonGroup, ModalComponent, GameModal } from './GameScreenAuxComponents'; 
+import EditModal from '../components/EditModal';
+import { GameOverModal } from './GameScreenAuxComponents';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -106,9 +108,15 @@ const GameScreen = () => {
   }
 
   const onChangeTeamName = (team) => {
-    setNewName(state[`${team}TeamName`]);
-    setChangingLeft(team === 'left');
+    setNewName(team);
+    setChangingLeft(team === state.leftTeamName);
     setNameModalIsVisible(true);
+  };
+
+  const onConfirmName = () => {
+    const teamKey = changingLeft ? 'leftTeamName' : 'rightTeamName';
+    dispatch({ type: 'CHANGE_TEAM_NAME', team: teamKey, newName });
+    setNameModalIsVisible(false);
   };
 
   const onChangePoints = () => {
@@ -119,17 +127,15 @@ const GameScreen = () => {
   const onConfirmGoal = () => {
     const parsedGoal = parseInt(newGoal);
     if (!isNaN(parsedGoal)) {
-      dispatch({ type: 'CHANGE_POINTS_GOAL', newGoal: parsedGoal });
+      if (parsedGoal > 50) {
+        dispatch({ type: 'CHANGE_POINTS_GOAL', newGoal: 50 });
+      } else {
+        dispatch({ type: 'CHANGE_POINTS_GOAL', newGoal: parsedGoal });
+      }
       setPointsModalIsVisible(false);
     } else {
       Alert.alert("Error", "Ingrese un número válido");
     }
-  };
-
-  const onConfirmName = () => {
-    const teamKey = changingLeft ? 'leftTeamName' : 'rightTeamName';
-    dispatch({ type: 'CHANGE_TEAM_NAME', team: teamKey, newName });
-    setNameModalIsVisible(false);
   };
 
   const onConfirmGame = () => {
@@ -142,28 +148,28 @@ const GameScreen = () => {
     setNameModalIsVisible(false);
     setGameModalIsVisible(false);
     dispatch({ type: 'SET_GAME_OVER', gameStatus: false });
+    setWinner('');
   };
 
-  const ScoreButtonGroup = ({ team }) => (
-    <Buttons
-      leftButton='minus'
-      rightButton='plus'
-      onPressLeft={() => handlePress('DECREMENT', `${team}Points`)}
-      onPressRight={() => handlePress('INCREMENT', `${team}Points`)} 
-      color='white'
-    />
-  );
-
-  const TeamName = ({ team }) => {
-    const areGood = team === 'left' ?
-                    state.leftPoints >= Math.floor(state.points / 2)
-                    : state.rightPoints >= Math.floor(state.points / 2); 
-
+  const loserChangingScore = (team) => {
     return (
-      <Team name={state[`${team}TeamName`]} onChangeName={() => onChangeTeamName(team)} areGood={areGood} />
+      state.leftPoints == state.points && team == 'right'
+      || state.rightPoints == state.points && team == 'left'
     );
-  };  
+  };
 
+  const onPressMinus = ({ team }) => {
+    if (loserChangingScore(team)) return;
+
+    handlePress('DECREMENT', `${team}Points`)
+  };
+
+  const onPressPlus = ({ team }) => {
+    if (loserChangingScore(team)) return;
+
+    handlePress('INCREMENT', `${team}Points`)
+  }; 
+  
   return (
     <SafeAreaView style={styles.screen}>
       <LinearGradient
@@ -173,18 +179,12 @@ const GameScreen = () => {
       <StatusBar barStyle="light-content" />
       <View style={styles.container}>
         <View style={styles.header}>
-          <LinearGradient 
-            colors={[Colors.red, Colors.green]} 
-            style={[StyleSheet.absoluteFill]}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-          />
           <View style={styles.pointsGoal}>
             <PointsGoal points={state.points} onPressPoints={() => onChangePoints()} />
           </View>
           <View style={styles.teamNames}>
-            <TeamName team="left" />
-            <TeamName team="right" />
+            <Team name={state.leftTeamName} onChangeName={() => onChangeTeamName(state.leftTeamName)} />
+            <Team name={state.rightTeamName} onChangeName={() => onChangeTeamName(state.rightTeamName)} />
           </View>
         </View>
         <View style={styles.scoreboard}>
@@ -194,139 +194,50 @@ const GameScreen = () => {
             rightPoints={state.rightPoints}
           />
         </View>
-        <View style={styles.scoreButtons}>
-          <ScoreButtonGroup team="left" />
-          <ScoreButtonGroup team="right" />
-        </View>
         <View style={styles.ads}>
-          <Logo height={12} width={12} />
+          {/* <Logo height={12} width={12} /> */}
+          <Text style={styles.adsText}>
+            {state.leftPoints.toString()}
+          </Text>
+          <Text style={styles.adsText}>
+            {state.rightPoints.toString()}
+          </Text>
+        </View>
+        <View style={styles.scoreButtons}>
+          <ScoreButtonGroup team="left" onPressLeft={onPressMinus} onPressRight={onPressPlus} />
+          <ScoreButtonGroup team="right" onPressLeft={onPressMinus} onPressRight={onPressPlus} />
         </View>
 
-        {/* GAME OVER MODAL */}
-        <CustomModal isVisible={gameModalIsVisible} onBackdropPress={onCancelModal}>
-          <View style={styles.modal}>
-            <Text style={styles.modalText}>¡Fin del Juego!</Text>
-            <Text style={styles.modalText}>Ganador: {winner}</Text>
-            
-            <Buttons 
-              leftButton='xmark'
-              rightButton='check'
-              onPressLeft={onCancelModal}
-              onPressRight={onConfirmGame}
-              color='black'
-            />
-          </View>
-        </CustomModal>
-
-        {/* POINTS MODAL */}
-        <CustomModal isVisible={pointsModalIsVisible} onBackdropPress={onCancelModal}>
-          <View style={styles.modal}>
-            <Text style={styles.modalText}>Cambiar Puntos</Text>
-            <TextInput 
-              value={newGoal}
-              onChangeText={goal => setNewGoal(goal)}
-              style={styles.input}
-            />
-            
-            <Buttons 
-              leftButton='xmark'
-              rightButton='check'
-              onPressLeft={onCancelModal}
-              onPressRight={onConfirmGoal}
-              color='black'
-            />
-          </View>
-        </CustomModal>
-
-        {/* GAME OVER MODAL */}
-        <CustomModal isVisible={nameModalIsVisible} onBackdropPress={onCancelModal}>
-          <View style={styles.modal}>
-            <Text style={styles.modalText}>Cambiar Nombre</Text>
-            <TextInput 
-              value={newName}
-              onChangeText={name => setNewName(name)}
-              style={styles.input}
-            />
-            
-            <Buttons 
-              leftButton='xmark'
-              rightButton='check'
-              onPressLeft={onCancelModal}
-              onPressRight={onConfirmName}
-              color='black'
-            />
-          </View>
-        </CustomModal>
+        {/* MODALS */}
+        <GameOverModal 
+          winner={winner} 
+          onPressLeft={onCancelModal} 
+          onPressRight={onConfirmGame}
+          isVisible={gameModalIsVisible} 
+          onBackdropPress={onCancelModal} 
+        />
+        <EditModal 
+          value={newGoal}
+          onChangeText={setNewGoal}
+          onPressLeft={onCancelModal}
+          onPressRight={onConfirmGoal}
+          isVisible={pointsModalIsVisible}
+          onBackdropPress={onCancelModal}
+          changingPoints={true}
+        />
+        <EditModal 
+          value={newName}
+          onChangeText={setNewName}
+          onPressLeft={onCancelModal}
+          onPressRight={onConfirmName}
+          isVisible={nameModalIsVisible}
+          onBackdropPress={onCancelModal}
+          changingPoints={false}
+        />
       </View>
     </SafeAreaView>
     
   );
 };
-
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-  },
-  background: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0
-  },
-  container: {
-    flex: 1,
-  },
-  header: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  scoreboard: {
-    flex: 15,
-  },
-  scoreButtons: {
-    flex: 2,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  ads: {
-    flex: 1,
-  },
-  tapArea: {
-    flex: 1
-  },
-  input: {
-    fontFamily: 'Russo-One',
-    fontSize: 24,
-    backgroundColor: 'white',
-    height: 64,
-    width: 64,
-    borderRadius: 28,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    marginTop: 12,
-    marginBottom: 8,
-  },
-  modal: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalText: {
-    fontFamily: 'Russo-One',
-    fontSize: 24,
-  },
-  logo: {
-    opacity: 0.8
-  },
-  teamNames: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default GameScreen;

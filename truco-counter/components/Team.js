@@ -3,7 +3,7 @@ import { Text, StyleSheet } from 'react-native';
 import TapArea from './TapArea';
 import { Colors } from '../constants/colors';
 
-const Team = ({ name, onChangeName, areGood }) => {
+const Team = ({ name, onChangeName }) => {
   return (
     <TapArea
       onPress={onChangeName}

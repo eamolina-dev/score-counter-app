@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import TapArea from './TapArea';
+import { Colors } from '../constants/colors';
 
 const PointsGoal = ({ points, onPressPoints }) => {
   return (
@@ -16,11 +17,6 @@ const PointsGoal = ({ points, onPressPoints }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   tapArea: {
     flex: 1,
     justifyContent: 'center',
@@ -28,10 +24,10 @@ const styles = StyleSheet.create({
   points: {
     fontFamily: 'Russo-One',
     fontSize: 48,
-  },
-  text: {
-    fontFamily: 'Russo-One',
-    fontSize: 12,
+    borderColor: Colors.yellow,
+    textShadowColor: Colors.yellow,
+    textShadowRadius: 3,
+    color: Colors.darkblue
   },
 });
 

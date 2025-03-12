@@ -2,14 +2,15 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Match from '../assets/svg/match.svg';
 
-const PointsGroup = ({ points, height, width }) => {
+const PointsGroup = ({ points, height = 100, width = 100 }) => {
+  const scale = height / 100;
+
   const Group = ({ style, tilt }) => {
     return (
       <Match 
-        height={64} 
-        width={64} 
-        style={style}
-        transform={[{ rotate: tilt }]}
+        height={64 * scale} 
+        width={64 * scale} 
+        style={[style, { transform: [{ rotate: tilt }] }]}
       />
     );
   };
@@ -17,23 +18,23 @@ const PointsGroup = ({ points, height, width }) => {
   return (
     <View style={[styles.pointsGroup, { height, width }]}>
       <Group
-        style={[styles.match1, { opacity: points >= 1 ? 1 : 0 }]}
+        style={[styles.match1, { opacity: points >= 1 ? 1 : 0, top: 10 * scale, left: -11 * scale }]}
         tilt="0deg"
       />
       <Group
-        style={[styles.match2, { opacity: points >= 2 ? 1 : 0 }]}
+        style={[styles.match2, { opacity: points >= 2 ? 1 : 0, top: -19 * scale, left: 23 * scale }]}
         tilt="90deg"
       />
       <Group
-        style={[styles.match3, { opacity: points >= 3 ? 1 : 0 }]}
+        style={[styles.match3, { opacity: points >= 3 ? 1 : 0, top: 20 * scale, left: 48 * scale }]}
         tilt="180deg"
       />
       <Group
-        style={[styles.match4, { opacity: points >= 4 ? 1 : 0 }]}
+        style={[styles.match4, { opacity: points >= 4 ? 1 : 0, top: 51 * scale, left: 14 * scale }]}
         tilt="270deg"
       />
       <Group
-        style={[styles.match5, { opacity: points >= 5 ? 1 : 0 }]}
+        style={[styles.match5, { opacity: points >= 5 ? 1 : 0, top: 13 * scale, left: 22 * scale }]}
         tilt="45deg"
       />
     </View>
@@ -44,33 +45,12 @@ const styles = StyleSheet.create({
   pointsGroup: {
     position: 'relative',
     alignSelf: 'stretch',
-    marginBottom: 24
   },
-  match1: {
-    position: 'absolute',
-    top: 10,
-    left: -11,
-  },
-  match2: {
-    position: 'absolute',
-    top: -19,
-    left: 23,
-  },
-  match3: {
-    position: 'absolute',
-    top: 20,
-    left: 48,
-  },
-  match4: {
-    position: 'absolute',
-    top: 51,
-    left: 14,
-  },
-  match5: {
-    position: 'absolute',
-    top: 13,
-    left: 22,
-  },
+  match1: { position: 'absolute' },
+  match2: { position: 'absolute' },
+  match3: { position: 'absolute' },
+  match4: { position: 'absolute' },
+  match5: { position: 'absolute' },
 });
 
 export default PointsGroup;
