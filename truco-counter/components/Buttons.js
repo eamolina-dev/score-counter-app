@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import { Colors } from '../constants/colors';
 import TapArea from './TapArea';
 import { FontAwesome6 } from "@expo/vector-icons";
-import IconButton from './IconButton';
 
 const Buttons = ({ leftButton, rightButton, onPressLeft, onPressRight, color }) => {
   return (
@@ -13,18 +12,11 @@ const Buttons = ({ leftButton, rightButton, onPressLeft, onPressRight, color }) 
           <FontAwesome6 name={leftButton} size={32} color={color} />
         </View>
       </TapArea>
-      {/* <TapArea onPress={onPressRight}>
+      <TapArea onPress={onPressRight}>
         <View style={[styles.button, styles.rightButton]}>
           <FontAwesome6 name={rightButton} size={32} color={color} />
         </View>
-      </TapArea> */}
-      <IconButton 
-        onPress={onPressRight}
-        style={[styles.button, styles.rightButton]}
-        iconName={rightButton}
-        iconSize={32}
-        iconColor={color}
-      />
+      </TapArea>
     </View>
   );
 };
@@ -51,7 +43,6 @@ const styles = StyleSheet.create({
   rightButton: {
     borderColor: Colors.green,
     borderWidth: 5,
-    // shadow
   },
 
 });

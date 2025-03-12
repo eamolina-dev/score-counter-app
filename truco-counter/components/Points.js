@@ -47,8 +47,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    // borderColor: 'red',
-    // borderWidth: 1,
   },
 });
 

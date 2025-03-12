@@ -1,26 +1,26 @@
 import React, { useEffect, useReducer, useCallback, useState } from 'react';
-import { StyleSheet, Alert, View, StatusBar, Text, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { Alert, View, StatusBar, Text } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import Logo from '../assets/svg/logo.svg';
-import Team from '../components/Team';
+import TeamName from '../components/TeamName';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScoreBoard from '../components/ScoreBoard';
 import { Colors } from '../constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import PointsGoal from '../components/PointsGoal';
 import { styles } from './GameScreen-styles';
-import { ScoreButtonGroup, ModalComponent, GameModal } from './GameScreenAuxComponents'; 
+import { ScoreButtonGroup  } from './GameScreenAuxComponents'; 
 import EditModal from '../components/EditModal';
 import { GameOverModal } from './GameScreenAuxComponents';
+import { validateTeamName, validateScore, validateUniqueNames } from '../validations/validations';
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'INCREMENT':
       return { 
         ...state, 
-        [action.team]: state[action.team] < state.points ? state[action.team] + 1 : state[action.team] 
+        [action.team]: state[action.team] < state.score ? state[action.team] + 1 : state[action.team] 
       };
     case 'DECREMENT':
       return { ...state, [action.team]: Math.max(0, state[action.team] - 1) };
@@ -38,7 +38,7 @@ const reducer = (state, action) => {
     case 'CHANGE_POINTS_GOAL':
       return { 
         ...state, 
-        points: action.newGoal, 
+        score: action.newGoal, 
         leftPoints: 0, 
         rightPoints: 0, 
         gameOver: false 
@@ -64,7 +64,7 @@ const GameScreen = () => {
   const [changingLeft, setChangingLeft] = useState(true);
   
   const initialState = {
-    points: 18,
+    score: 18,
     leftPoints: 0,
     rightPoints: 0,
     gameOver: false,
@@ -74,8 +74,6 @@ const GameScreen = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const [loaded, error] = useFonts({
-    // 'Henny-Penny': require('../assets/fonts/HennyPenny-Regular.ttf'),
-    // 'Atma': require('../assets/fonts/Atma-Regular.ttf'),
     'Russo-One': require('../assets/fonts/RussoOne-Regular.ttf'),
   });
 
@@ -86,8 +84,8 @@ const GameScreen = () => {
   useEffect(() => {
     if (state.gameOver) return;
   
-    if (state.leftPoints === state.points || state.rightPoints === state.points) {
-      const winnerName = state.leftPoints === state.points ? state.leftTeamName : state.rightTeamName;
+    if (state.leftPoints === state.score || state.rightPoints === state.score) {
+      const winnerName = state.leftPoints === state.score ? state.leftTeamName : state.rightTeamName;
       setWinner(winnerName);
       dispatch({ type: 'SET_GAME_OVER', gameStatus: true });
       setGameModalIsVisible(true);
@@ -114,17 +112,27 @@ const GameScreen = () => {
   };
 
   const onConfirmName = () => {
+    const error = validateTeamName(newName);
+    if (error) return (
+      Alert.alert('Error: ', error)
+    );
+
     const teamKey = changingLeft ? 'leftTeamName' : 'rightTeamName';
     dispatch({ type: 'CHANGE_TEAM_NAME', team: teamKey, newName });
     setNameModalIsVisible(false);
   };
 
   const onChangePoints = () => {
-    setNewGoal(state.points.toString());
+    setNewGoal(state.score.toString());
     setPointsModalIsVisible(true);
   };
 
   const onConfirmGoal = () => {
+    const error = validateScore(newGoal);
+    if (error) return (
+      Alert.alert('Error: ', error)
+    );
+
     const parsedGoal = parseInt(newGoal);
     if (!isNaN(parsedGoal)) {
       if (parsedGoal > 50) {
@@ -153,8 +161,8 @@ const GameScreen = () => {
 
   const loserChangingScore = (team) => {
     return (
-      state.leftPoints == state.points && team == 'right'
-      || state.rightPoints == state.points && team == 'left'
+      state.leftPoints == state.score && team == 'right'
+      || state.rightPoints == state.score && team == 'left'
     );
   };
 
@@ -180,22 +188,21 @@ const GameScreen = () => {
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.pointsGoal}>
-            <PointsGoal points={state.points} onPressPoints={() => onChangePoints()} />
+            <PointsGoal score={state.score} onPressPoints={() => onChangePoints()} />
           </View>
           <View style={styles.teamNames}>
-            <Team name={state.leftTeamName} onChangeName={() => onChangeTeamName(state.leftTeamName)} />
-            <Team name={state.rightTeamName} onChangeName={() => onChangeTeamName(state.rightTeamName)} />
+            <TeamName name={state.leftTeamName} onChangeName={() => onChangeTeamName(state.leftTeamName)} />
+            <TeamName name={state.rightTeamName} onChangeName={() => onChangeTeamName(state.rightTeamName)} />
           </View>
         </View>
         <View style={styles.scoreboard}>
           <ScoreBoard 
-            points={state.points}
+            score={state.score}
             leftPoints={state.leftPoints}
             rightPoints={state.rightPoints}
           />
         </View>
         <View style={styles.ads}>
-          {/* <Logo height={12} width={12} /> */}
           <Text style={styles.adsText}>
             {state.leftPoints.toString()}
           </Text>

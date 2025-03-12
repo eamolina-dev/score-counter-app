@@ -50,8 +50,6 @@ const styles = StyleSheet.create({
     top: 0,
     height: 12,
     width: '100%',
-    // borderBottomLeftRadius: 8,
-    // borderBottomRightRadius: 8,
   },
 });
 

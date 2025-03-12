@@ -3,7 +3,7 @@ import { Text, StyleSheet } from 'react-native';
 import TapArea from './TapArea';
 import { Colors } from '../constants/colors';
 
-const Team = ({ name, onChangeName }) => {
+const TeamName = ({ name, onChangeName }) => {
   return (
     <TapArea
       onPress={onChangeName}
@@ -34,4 +34,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Team;
+export default TeamName;

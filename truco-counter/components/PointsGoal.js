@@ -3,14 +3,14 @@ import { StyleSheet, Text } from 'react-native';
 import TapArea from './TapArea';
 import { Colors } from '../constants/colors';
 
-const PointsGoal = ({ points, onPressPoints }) => {
+const PointsGoal = ({ score, onPressPoints }) => {
   return (
     <TapArea 
       onPress={onPressPoints}
       style={styles.tapArea}
     >
-      <Text style={styles.points}>
-        {points}
+      <Text style={styles.score}>
+        {score}
       </Text>
     </TapArea>
   );
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  points: {
+  score: {
     fontFamily: 'Russo-One',
     fontSize: 48,
     borderColor: Colors.yellow,

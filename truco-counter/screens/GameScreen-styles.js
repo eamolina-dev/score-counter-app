@@ -7,7 +7,6 @@ export const styles = StyleSheet.create({
   },
   scrollview: {
     flex: 1, 
-    // alignSelf: 'stretch',
   },
   background: {
     position: 'absolute',
@@ -18,13 +17,13 @@ export const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    // borderColor: 'red',
     borderWidth: 1
   },
   header: {
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
+
   },
   scoreboard: {
     flex: 15,
@@ -79,20 +78,14 @@ export const styles = StyleSheet.create({
   },
   modalHeader: {
     width: 50,
-    // borderColor: 'red',
-    // borderWidth: 2,
   },
   modalBody: {
     width: 220,
     justifyContent: 'center',
     alignItems: 'center',
-    // borderColor: 'blue',
-    // borderWidth: 2,
   },
   modalFooter: {
     width: 50,
-    // borderColor: 'red',
-    // borderWidth: 2,
   },
   logo: {
     opacity: 0.8
@@ -121,7 +114,6 @@ export const styles = StyleSheet.create({
   rightButton: {
     borderColor: Colors.green,
     borderWidth: 5,
-    // shadow
   },
   leftPlayerGradient: {
     position: 'absolute',

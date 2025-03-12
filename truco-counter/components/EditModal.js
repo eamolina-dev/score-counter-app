@@ -3,8 +3,9 @@ import { View, TextInput, StyleSheet } from 'react-native';
 import CustomModal from "./CustomModal";
 import IconButton from './IconButton';
 import { Colors } from '../constants/colors';
+import { validateTeamName, validateScore, validateUniqueNames } from '../validations/validations';
 
-const EditModal = ({ value, onChangeText, onPressLeft, onPressRight, isVisible, onBackdropPress, changingPoints }) => {
+const EditModal = ({ value, onChangeText, onPressLeft, onPressRight, isVisible, onBackdropPress, changingPoints }) => { 
   return (
     <CustomModal isVisible={isVisible} onBackdropPress={onBackdropPress}>
       <View style={styles.modal}>
@@ -24,6 +25,7 @@ const EditModal = ({ value, onChangeText, onPressLeft, onPressRight, isVisible, 
             style={styles.modalInput}
             keyboardType={ changingPoints? "numeric" : "default" }
           />
+          {/* {error && <Text style={{ color: 'red' }}>{error}</Text>} */}
         </View>
         <View style={styles.modalFooter}>
           <IconButton 

@@ -18,8 +18,6 @@ const CustomModal = ({ children, isVisible, onBackdropPress }) => {
       <LinearGradient
         colors={[Colors.white, Colors.white]} 
         style={styles.gradient}
-        // start={{ x: 0.5, y: 0.2 }}
-        // end={{ x: 0.5, y: 0.7 }}
       >
 
           <View style={styles.modalContent}>{children}</View>

@@ -3,8 +3,8 @@ import { View, StyleSheet } from 'react-native';
 import ScoreColumn from './ScoreColumn';
 import { Colors } from '../constants/colors';
 
-const ScoreBoard = ({ points, leftPoints, rightPoints }) => {
-  const half = Math.floor(points / 2);
+const ScoreBoard = ({ score, leftPoints, rightPoints }) => {
+  const half = Math.floor(score / 2);
 
   const markMidLine = leftPoints >= half || rightPoints >= half;
 
@@ -13,13 +13,13 @@ const ScoreBoard = ({ points, leftPoints, rightPoints }) => {
       {/* <View style={styles.topDivider} /> */}
       <View style={styles.container}>
         <ScoreColumn 
-          pointsGoal={points} 
+          pointsGoal={score} 
           points={leftPoints} 
           markMidLine={markMidLine}
         />
           <View style={styles.divider} />
         <ScoreColumn 
-          pointsGoal={points} 
+          pointsGoal={score} 
           points={rightPoints} 
           markMidLine={markMidLine}
         />
@@ -44,13 +44,11 @@ const styles = StyleSheet.create({
     width: 3,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
-    // alignSelf: 'flex-start',
   },
   topDivider: {
     backgroundColor: Colors.lightgrey,
     height: 1,
     width: '100%',
-    // alignSelf: 'flex-start' 
   },
 });
 
