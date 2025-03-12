@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import Modal from "react-native-modal";
 import { Colors } from "../constants/colors";
-import { LinearGradient } from "expo-linear-gradient";
 
 const CustomModal = ({ children, isVisible, onBackdropPress }) => {
   return (
@@ -15,13 +14,7 @@ const CustomModal = ({ children, isVisible, onBackdropPress }) => {
       presentationStyle="overFullScreen"
     >
       <View style={styles.modalContainer}>
-      <LinearGradient
-        colors={[Colors.white, Colors.white]} 
-        style={styles.gradient}
-      >
-
-          <View style={styles.modalContent}>{children}</View>
-        </LinearGradient>
+        <View style={styles.modalContent}>{children}</View>
       </View>
     </Modal>
   );
@@ -34,7 +27,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 28,
     overflow: "hidden",
-    backgroundColor: 'white'
+    backgroundColor: Colors.white,
   },
   gradient: {
     flex: 1,

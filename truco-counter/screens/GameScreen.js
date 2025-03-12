@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer, useCallback, useState } from 'react';
 import { Alert, View, StatusBar, Text } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import TeamName from '../components/TeamName';
@@ -51,18 +50,13 @@ const reducer = (state, action) => {
 SplashScreen.preventAutoHideAsync();
 
 const GameScreen = () => {
-  const route = useRoute();
-
-  const [pointsModalIsVisible, setPointsModalIsVisible] = useState(false);
-  const [nameModalIsVisible, setNameModalIsVisible] = useState(false);
-  const [gameModalIsVisible, setGameModalIsVisible] = useState(false);
-
   const [newGoal, setNewGoal] = useState('');
   const [newName, setNewName] = useState('');
   const [winner, setWinner] = useState('');
-
+  const [activeModal, setActiveModal] = useState(null); // null, 'points', 'name', 'game'
   const [changingLeft, setChangingLeft] = useState(true);
-  
+  const [changingPoints, setChangingPoints] = useState(false);
+
   const initialState = {
     score: 18,
     leftPoints: 0,
@@ -71,7 +65,9 @@ const GameScreen = () => {
     leftTeamName: 'Nosotros',
     rightTeamName: 'Ellos',
   };
+
   const [state, dispatch] = useReducer(reducer, initialState);
+  const dispatchAction = (type, payload = {}) => dispatch({ type, ...payload });
 
   const [loaded, error] = useFonts({
     'Russo-One': require('../assets/fonts/RussoOne-Regular.ttf'),
@@ -80,18 +76,16 @@ const GameScreen = () => {
   const handlePress = useCallback((type, team) => {
     dispatch({ type, team });
   }, [dispatch]);
-  
+
   useEffect(() => {
-    if (state.gameOver) return;
-  
-    if (state.leftPoints === state.score || state.rightPoints === state.score) {
+    if (!state.gameOver && (state.leftPoints === state.score || state.rightPoints === state.score)) {
       const winnerName = state.leftPoints === state.score ? state.leftTeamName : state.rightTeamName;
       setWinner(winnerName);
-      dispatch({ type: 'SET_GAME_OVER', gameStatus: true });
-      setGameModalIsVisible(true);
+      dispatchAction('SET_GAME_OVER', { gameStatus: true });
+      showModal('game');
     }
-  }, [state.leftPoints, state.rightPoints]);  
-
+  }, [state.leftPoints, state.rightPoints, state.gameOver]);
+  
   useEffect(() => {
     const hideSplash = async () => {
       if (loaded || error) {
@@ -106,25 +100,29 @@ const GameScreen = () => {
   }
 
   const onChangeTeamName = (team) => {
+    setChangingPoints(false);
     setNewName(team);
     setChangingLeft(team === state.leftTeamName);
-    setNameModalIsVisible(true);
+    showModal('name');
   };
 
   const onConfirmName = () => {
     const error = validateTeamName(newName);
-    if (error) return (
-      Alert.alert('Error: ', error)
+    const error2 = changingLeft ? validateUniqueNames(newName, state.rightTeamName) 
+                                : validateUniqueNames(state.leftTeamName, newName);
+    if (error || error2) return (
+      Alert.alert('Error: ', error || error2)
     );
 
     const teamKey = changingLeft ? 'leftTeamName' : 'rightTeamName';
-    dispatch({ type: 'CHANGE_TEAM_NAME', team: teamKey, newName });
-    setNameModalIsVisible(false);
+    dispatchAction('CHANGE_TEAM_NAME', { team: teamKey, newName });
+    hideModal();
   };
 
   const onChangePoints = () => {
+    setChangingPoints(true);
     setNewGoal(state.score.toString());
-    setPointsModalIsVisible(true);
+    showModal('points');
   };
 
   const onConfirmGoal = () => {
@@ -136,26 +134,28 @@ const GameScreen = () => {
     const parsedGoal = parseInt(newGoal);
     if (!isNaN(parsedGoal)) {
       if (parsedGoal > 50) {
-        dispatch({ type: 'CHANGE_POINTS_GOAL', newGoal: 50 });
+        dispatchAction('CHANGE_POINTS_GOAL', { newGoal: 50 });
       } else {
-        dispatch({ type: 'CHANGE_POINTS_GOAL', newGoal: parsedGoal });
+        dispatchAction('CHANGE_POINTS_GOAL', { newGoal: parsedGoal });
       }
-      setPointsModalIsVisible(false);
+      hideModal();
     } else {
       Alert.alert("Error", "Ingrese un número válido");
     }
   };
 
   const onConfirmGame = () => {
-    dispatch({ type: 'RESET_GAME' });
-    setGameModalIsVisible(false);
+    dispatchAction('RESET_GAME');
+    hideModal();
   };
 
+  const showModal = (type) => setActiveModal(type);
+  const hideModal = () => setActiveModal(null);
+
+
   const onCancelModal = () => {
-    setPointsModalIsVisible(false);
-    setNameModalIsVisible(false);
-    setGameModalIsVisible(false);
-    dispatch({ type: 'SET_GAME_OVER', gameStatus: false });
+    hideModal();
+    dispatchAction('SET_GAME_OVER', { gameStatus: false });
     setWinner('');
   };
 
@@ -181,7 +181,8 @@ const GameScreen = () => {
   return (
     <SafeAreaView style={styles.screen}>
       <LinearGradient
-        colors={true ? [Colors.darkblue, '#000000'] : []}
+        colors={[Colors.darkblue, Colors.black]}
+        // colors={[Colors.lightblue, Colors.darkblue]}
         style={styles.background}
       />
       <StatusBar barStyle="light-content" />
@@ -220,26 +221,17 @@ const GameScreen = () => {
           winner={winner} 
           onPressLeft={onCancelModal} 
           onPressRight={onConfirmGame}
-          isVisible={gameModalIsVisible} 
+          isVisible={activeModal === 'game'} 
           onBackdropPress={onCancelModal} 
         />
         <EditModal 
-          value={newGoal}
-          onChangeText={setNewGoal}
+          value={changingPoints ? newGoal : newName}
+          onChangeText={changingPoints ? setNewGoal : setNewName}
           onPressLeft={onCancelModal}
-          onPressRight={onConfirmGoal}
-          isVisible={pointsModalIsVisible}
+          onPressRight={changingPoints ? onConfirmGoal : onConfirmName}
+          isVisible={changingPoints ? activeModal === 'points' : activeModal === 'name'}
           onBackdropPress={onCancelModal}
-          changingPoints={true}
-        />
-        <EditModal 
-          value={newName}
-          onChangeText={setNewName}
-          onPressLeft={onCancelModal}
-          onPressRight={onConfirmName}
-          isVisible={nameModalIsVisible}
-          onBackdropPress={onCancelModal}
-          changingPoints={false}
+          changingPoints={changingPoints}
         />
       </View>
     </SafeAreaView>

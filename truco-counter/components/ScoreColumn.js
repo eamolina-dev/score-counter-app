@@ -10,7 +10,7 @@ const ScoreColumn = ({ pointsGoal, points, markMidLine }) => {
   const goods = points >= half ? points - half : 0;
 
   return (
-    <View style={[styles.container, { borderTopColor: goods > 0 ? Colors.green : Colors.red, borderTopWidth: 3 }]}>
+    <View style={[styles.container, { borderTopColor: goods > 0 ? Colors.teal : Colors.red, borderTopWidth: 3 }]}>
       <LinearGradient 
         colors={[points <= half ? 'transparent' : 'transparent', 'transparent']} 
         style={styles.scoreboardGradient}

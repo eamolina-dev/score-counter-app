@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     color: Colors.white,
+    // color: Colors.darkblue,
   },
 });
 

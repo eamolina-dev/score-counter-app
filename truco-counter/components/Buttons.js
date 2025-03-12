@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     borderWidth: 5,
   },
   rightButton: {
-    borderColor: Colors.green,
+    borderColor: Colors.teal,
     borderWidth: 5,
   },
 

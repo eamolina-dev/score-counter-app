@@ -4,6 +4,7 @@ import Buttons from "../components/Buttons";
 import CustomModal from "../components/CustomModal";
 import { styles } from './GameScreen-styles';
 import IconButton from '../components/IconButton';
+import { Colors } from '../constants/colors';
 
 export const GameOverModal = ({ winner, onPressLeft, onPressRight, isVisible, onBackdropPress }) => {
   return (
@@ -15,7 +16,7 @@ export const GameOverModal = ({ winner, onPressLeft, onPressRight, isVisible, on
             style={[styles.button, styles.leftButton]}
             iconName='xmark'
             iconSize={32}
-            iconColor='black'
+            iconColor={Colors.black}
           />
         </View>
         <View style={styles.modalBody}>
@@ -28,7 +29,7 @@ export const GameOverModal = ({ winner, onPressLeft, onPressRight, isVisible, on
             style={[styles.button, styles.rightButton]}
             iconName='check'
             iconSize={32}
-            iconColor='black'
+            iconColor={Colors.black}
           />
         </View>
       </View>
@@ -42,6 +43,6 @@ export const ScoreButtonGroup = ({ team, onPressLeft, onPressRight }) => (
     rightButton='plus'
     onPressLeft={() => onPressLeft({team})}
     onPressRight={() => onPressRight({team})} 
-    color='white'
+    color={Colors.white}
   />
 );
